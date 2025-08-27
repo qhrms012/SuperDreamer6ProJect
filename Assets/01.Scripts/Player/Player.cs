@@ -20,6 +20,8 @@ public class Player : MonoBehaviour , IDamageable
 
 
     private StateMachine stateMachine;
+    [Header("Combat")]
+    [SerializeField] private AutoAimShooter shooter;
 
     public Action<float> onDamage;
 
@@ -33,11 +35,15 @@ public class Player : MonoBehaviour , IDamageable
 
     private void Start()
     {
-        stateMachine.SetState(new PlayerShotState(stateMachine, this));
+        stateMachine.SetState(new PlayerShotState(stateMachine, this,shooter));
+    }
+
+    private void Update()
+    {
+        stateMachine.Update(moveInput);
     }
     public void OnMove(InputValue value)
     {
-        stateMachine.SetState(new RunState(stateMachine, this));
         moveInput = value.Get<Vector2>();
     }
 

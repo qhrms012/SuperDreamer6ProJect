@@ -33,5 +33,6 @@ public class Enemy : MonoBehaviour , IDamageable
     {
         curHp -= damage;
         onDamage?.Invoke(curHp);
+        Debug.Log($"EnemyÃ¼·Â : {curHp}");
     }
 }
