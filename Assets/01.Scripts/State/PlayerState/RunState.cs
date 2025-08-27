@@ -24,7 +24,7 @@ public class RunState : Istate
     {
         if(playerVector.magnitude == 0)
         {
-            stateMachine.SetState(new ShotState(stateMachine, player));
+            stateMachine.SetState(new PlayerShotState(stateMachine, player));
         }
     }
 

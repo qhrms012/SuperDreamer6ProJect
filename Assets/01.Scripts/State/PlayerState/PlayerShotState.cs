@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotState : Istate
+public class PlayerShotState : Istate
 {
 
     private StateMachine stateMachine;
     //private Animator animator;
     private Player player;
 
-    public ShotState(StateMachine machine, /*Animator animator,*/ Player player)
+    public PlayerShotState(StateMachine machine, /*Animator animator,*/ Player player)
     {
         stateMachine = machine;
         //this.animator = animator;

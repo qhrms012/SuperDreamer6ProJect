@@ -33,7 +33,7 @@ public class Player : MonoBehaviour , IDamageable
 
     private void Start()
     {
-        stateMachine.SetState(new ShotState(stateMachine, this));
+        stateMachine.SetState(new PlayerShotState(stateMachine, this));
     }
     public void OnMove(InputValue value)
     {
