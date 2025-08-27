@@ -70,6 +70,12 @@ public class Bullet : MonoBehaviour
         if (collision.TryGetComponent<IDamageable>(out var target))
         {
             target.TakeDamage(damage);
+
+            // 빙결/화상 등 온히트 효과 호출
+            var effects = GetComponents<IOnHitEffect>();
+            for (int i = 0; i < effects.Length; i++)
+                effects[i].OnHit(collision.gameObject);
+
             DisableBullet();
         }
 
@@ -85,5 +91,10 @@ public class Bullet : MonoBehaviour
             rb.velocity = Vector2.zero;
         gameObject.SetActive(false);
     }
+}
+
+public interface IOnHitEffect
+{
+    void OnHit(GameObject target);
 }
 

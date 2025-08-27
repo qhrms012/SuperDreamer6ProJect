@@ -2,133 +2,115 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class AutoAimShooter : MonoBehaviour
 {
-    [Header("Targeting")]
-    [SerializeField] private float range = 6f;
-    [SerializeField] private LayerMask enemyMask;
-    [SerializeField] private float retargetInterval = 0.15f;
-
-    [Header("Shooting")]
+    [Header("Refs")]
+    [SerializeField] private TargetRef targetRef;
     [SerializeField] private Transform firePoint;
+
+    [Header("Fire")]
     [SerializeField] private float fireRate = 3f;
+    [SerializeField] private float range = 0f;
+    [SerializeField] private bool useBallistic = true;
 
-    // 포물선
+    [Header("Straight")]
+    [SerializeField] private float straightSpeed = 16f;
+
     [Header("Ballistic")]
-    [SerializeField] private float ballisticSpeedHint = 12f;
-    [SerializeField] private float minFlightTime = 0.25f;
-    [SerializeField] private float maxFlightTime = 0.9f;
-
-
+    [SerializeField] private float speedHint = 12f;
+    [SerializeField] private float minT = 0.25f, maxT = 0.9f;
     [SerializeField] private float arcHeight = 1.5f;
 
-    [Header("Aiming (optional)")]
-    [SerializeField] private Transform aimRoot;
+    float shootTimer;
 
-    private Transform target;
-    private float shootTimer;
-    private float retargetTimer;
-
-    private void Awake()
+    void Awake()
     {
-        if (!firePoint) firePoint = transform;
-        if (!aimRoot) aimRoot = transform;
-        if (enemyMask.value == 0) enemyMask = LayerMask.GetMask("Enemy");
+        firePoint = transform;
     }
 
-    private void Update()
+    void Update()
     {
-        // 타겟 재탐색
-        retargetTimer -= Time.deltaTime;
-        if (retargetTimer <= 0f)
+        var tgt = targetRef ? targetRef.Target : null;
+        if (!tgt || !tgt.gameObject.activeInHierarchy) return;
+
+        if (range > 0f)
         {
-            target = FindClosestTarget();
-            retargetTimer = retargetInterval;
+            float sq = ((Vector2)tgt.position - (Vector2)transform.position).sqrMagnitude;
+            if (sq > range * range) return; // 사거리 밖이면 발사 안 함
         }
-        if (target == null || firePoint == null) return;
 
-        // 조준
-        //Vector2 aimDir = (target.position - firePoint.position).normalized;
-        //if (aimRoot) aimRoot.up = aimDir;
-        //firePoint.up = aimDir;
-
-        // 발사
         shootTimer -= Time.deltaTime;
         if (shootTimer <= 0f)
         {
-            ShootBallistic(target);
+            Shoot(tgt);
             shootTimer = 1f / fireRate;
         }
     }
 
-    private Transform FindClosestTarget()
+    void Shoot(Transform tgt)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, range, enemyMask);
-        Transform best = null;
-        float bestSq = float.MaxValue;
-
-        foreach (var h in hits)
-        {
-            if (!h || !h.gameObject.activeInHierarchy) continue;
-            float sq = (h.transform.position - transform.position).sqrMagnitude;
-            if (sq < bestSq) { bestSq = sq; best = h.transform; }
-        }
-        return best;
+        if (useBallistic) ShootBallistic(tgt);
+        else ShootStraight(tgt);
     }
 
-    // 포물선 발사
-    private void ShootBallistic(Transform tgt)
+    void ShootStraight(Transform tgt)
     {
-        GameObject go = ObjectPoolManager.Instance.Get(PoolKey.PlayerBullet);
-        go.transform.position = firePoint.position;
+        Vector2 origin = firePoint.position;
+        Vector2 dir = ((Vector2)tgt.position - origin).normalized;
 
-        var bullet = go.GetComponent<Bullet>();
-        var rb = go.GetComponent<Rigidbody2D>();
+        FireVelocity(dir * straightSpeed);
+    }
 
-
-        float g = Physics2D.gravity.y * rb.gravityScale;
-        float gAbs = Mathf.Abs(g);
-
+    void ShootBallistic(Transform tgt)
+    {
         Vector2 origin = firePoint.position;
         Vector2 dest = tgt.position;
-        Vector2 dp = dest - origin;
 
-        Vector2 v0;
+        var bullet = ObjectPoolManager.Instance.Get(PoolKey.PlayerBullet);
+        var rbS = bullet.GetComponent<Rigidbody2D>();
 
+        float g = Physics2D.gravity.y * (rbS ? rbS.gravityScale : 1f);
+        float gAbs = Mathf.Abs(g);
 
+        bullet.SetActive(false);
+
+        Vector2 dp2 = dest - origin;
         float yApex = Mathf.Max(origin.y, dest.y) + Mathf.Max(0.01f, arcHeight);
 
-        // 올라가는 구간
         float hUp = Mathf.Max(0.001f, yApex - origin.y);
-        float v0y = Mathf.Sqrt(2f * gAbs * hUp);   // 위로 가는 초기 y속도
+        float v0y = Mathf.Sqrt(2f * gAbs * hUp);
         float tUp = v0y / gAbs;
 
-        // 내려가는 구간
         float hDown = Mathf.Max(0f, yApex - dest.y);
         float tDown = Mathf.Sqrt(2f * hDown / gAbs);
 
-        float T = Mathf.Clamp(tUp + tDown, minFlightTime, maxFlightTime);
-        float v0x = dp.x / Mathf.Max(0.001f, T);
+        float T = Mathf.Clamp(tUp + tDown, minT, maxT);
+        float v0x = dp2.x / Mathf.Max(0.001f, T);
 
-        v0 = new Vector2(v0x, v0y);
-
-
-        // 총알 방향 연출
-        go.transform.up = v0.normalized;
-
-        // 초기 속도 적용
-
-        bullet.Initialize(BulletTeam.Player, v0);
-
+        Vector2 v0 = new Vector2(v0x, v0y);
+        FireVelocity(v0, orient: true);
     }
 
-
-    private void OnDrawGizmosSelected()
+    void FireVelocity(Vector2 v0, bool orient = true)
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, range);
+        var go = ObjectPoolManager.Instance.Get(PoolKey.PlayerBullet);
+        go.transform.position = firePoint.position;
+
+        if (orient) go.transform.up = v0.normalized;
+
+        var b = go.GetComponent<Bullet>();
+        var rb = go.GetComponent<Rigidbody2D>();
+
+        if (b != null) 
+            b.Initialize(BulletTeam.Player, v0);
+
+        else 
+        { 
+            if (rb) 
+            { 
+                rb.velocity = v0; go.SetActive(true); 
+            } 
+        }
     }
 }
 
