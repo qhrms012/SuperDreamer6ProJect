@@ -2515,12 +2515,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3177bb26ade64d947afacd2c809e047b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRef: {fileID: 0}
+  targetRef: {fileID: 1431283633}
   firePoint: {fileID: 1463594781}
   fireRate: 1
   range: 15
   useBallistic: 1
-  useLead: 0
   straightSpeed: 16
   speedHint: 12
   minT: 0.25
