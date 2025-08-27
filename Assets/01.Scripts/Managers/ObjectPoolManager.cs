@@ -6,7 +6,9 @@ public enum PoolKey
 {
     PlayerBullet,
     EnemyBullet,
-    Enemy
+    Enemy,
+    BlackHole,
+    FreezeArrow
 }
 
 public class ObjectPoolManager : Singleton<ObjectPoolManager>
