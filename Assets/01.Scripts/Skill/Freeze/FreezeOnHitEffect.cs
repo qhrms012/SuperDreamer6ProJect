@@ -9,8 +9,17 @@ public class FreezeOnHitEffect : MonoBehaviour, IOnHitEffect
 
     public void OnHit(GameObject target)
     {
-        var f = target.GetComponent<FreezeController>();
-        f.ApplyFreeze(freezeDuration);
+        FreezeTintVisual tint;
+
+        var freeze = target.GetComponentInParent<FreezeController>();
+        tint = target.GetComponentInChildren<FreezeTintVisual>();
+
+        // 2) ºù°á Àû¿ë
+
+        freeze.ApplyFreeze(freezeDuration);
+        tint.Play(freezeDuration);
+
+        
     }
 }
 
