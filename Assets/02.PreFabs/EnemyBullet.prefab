@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 406779669332644499}
   - component: {fileID: 4265997783542798538}
   - component: {fileID: 7564482907287080550}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EnemyBullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -102,6 +102,7 @@ MonoBehaviour:
   damage: 20
   speed: 2
   team: 1
+  lifetime: 3
 --- !u!50 &4265997783542798538
 Rigidbody2D:
   serializedVersion: 4
@@ -117,7 +118,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

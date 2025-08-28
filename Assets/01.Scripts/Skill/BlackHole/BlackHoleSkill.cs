@@ -9,6 +9,8 @@ public class BlackHoleSkill : MonoBehaviour, ISkill
     [SerializeField] private float cooldown = 6f;
     private float lastUse = -999f;
 
+    [Header("Bullet")]
+    [SerializeField] private PoolKey bulletKey = PoolKey.PlayerBullet;
     public float Cooldown => cooldown;
     public float GetRemainingCooldown() => Mathf.Max(0f, lastUse + cooldown - Time.time);
 
@@ -19,7 +21,7 @@ public class BlackHoleSkill : MonoBehaviour, ISkill
         var tgt = targetRef ? targetRef.Target : null;
         if (!tgt) return false;
 
-        var bh = ObjectPoolManager.Instance.Get(PoolKey.BlackHole);
+        var bh = ObjectPoolManager.Instance.Get(bulletKey);
         bh.transform.position = tgt.position;
         // bh.GetComponent<BlackHole>()?.Activate(3f, LayerMask.GetMask("Enemy"));
         bh.SetActive(true);

@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class MultiShotSkill : MonoBehaviour, ISkill
 {
+    [Header("Refs")]
     [SerializeField] private TargetRef targetRef;
     [SerializeField] private Transform firePoint;
+
+    [Header("Volley")]
     [SerializeField] private int shots = 5;
     [SerializeField] private float spreadDeg = 30f;
     [SerializeField] private float cooldown = 5f;
@@ -14,6 +16,10 @@ public class MultiShotSkill : MonoBehaviour, ISkill
     [Header("Ballistic")]
     [SerializeField] private float speedHint = 12f;
     [SerializeField] private float minT = 0.2f, maxT = 0.9f;
+
+    [Header("Bullet")]
+    [SerializeField] private PoolKey bulletKey = PoolKey.PlayerBullet;
+    [SerializeField] private BulletTeam team = BulletTeam.Player;      
 
     private float lastUse = -999f;
 
@@ -23,19 +29,22 @@ public class MultiShotSkill : MonoBehaviour, ISkill
     public bool TryCast()
     {
         if (Time.time < lastUse + cooldown) return false;
+
         var tgt = targetRef ? targetRef.Target : null;
-        if (!tgt) return false;
+        if (!tgt || !tgt.gameObject.activeInHierarchy) return false;
+        if (!firePoint) firePoint = transform;
 
-        // Áß¾Ó Åº v0 ±¸ÇÏ°í ÁÂ¿ì·Î È¸Àü
-        Vector2 origin = firePoint.position;
-        Vector2 dest = tgt.position;
 
-        var sample = ObjectPoolManager.Instance.Get(PoolKey.PlayerBullet);
+        var sample = ObjectPoolManager.Instance.Get(bulletKey);
         var rbS = sample.GetComponent<Rigidbody2D>();
         float g = Physics2D.gravity.y * (rbS ? rbS.gravityScale : 1f);
-        sample.SetActive(false);
+        sample.SetActive(false); // Ç®·Î ¹Ý³³
 
+        // Áß¾Ó Åº v0 ¡æ ÁÂ¿ì·Î È¸ÀüÇÏ¸ç n¹ß ¹ß»ç
+        Vector2 origin = firePoint.position;
+        Vector2 dest = tgt.position;
         Vector2 v0Center = ComputeV0(origin, dest, g);
+
         int n = Mathf.Max(1, shots);
         for (int i = 0; i < n; i++)
         {
@@ -43,10 +52,14 @@ public class MultiShotSkill : MonoBehaviour, ISkill
             float off = Mathf.Lerp(-spreadDeg * 0.5f, spreadDeg * 0.5f, t);
             Vector2 v0 = Rotate(v0Center, off);
 
-            var go = ObjectPoolManager.Instance.Get(PoolKey.PlayerBullet);
+            var go = ObjectPoolManager.Instance.Get(bulletKey);
             go.transform.position = origin;
             go.transform.up = v0.normalized;
-            go.GetComponent<Bullet>()?.Initialize(BulletTeam.Player, v0);
+
+            var b = go.GetComponent<Bullet>();
+            var rb = go.GetComponent<Rigidbody2D>();
+            if (b != null) b.Initialize(team, v0);
+            else { if (rb) { rb.velocity = v0; go.SetActive(true); } }
         }
 
         lastUse = Time.time;
@@ -57,13 +70,18 @@ public class MultiShotSkill : MonoBehaviour, ISkill
     {
         Vector2 dp = dest - origin;
         float T = Mathf.Clamp(dp.magnitude / Mathf.Max(0.01f, speedHint), minT, maxT);
-        return new Vector2(dp.x / T, (dp.y - 0.5f * gy * T * T) / T);
+        return new Vector2(
+            dp.x / T,
+            (dp.y - 0.5f * gy * T * T) / T
+        );
     }
+
     Vector2 Rotate(Vector2 v, float deg)
     {
         float r = deg * Mathf.Deg2Rad; float c = Mathf.Cos(r), s = Mathf.Sin(r);
         return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
     }
 }
+
 
 

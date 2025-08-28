@@ -48,7 +48,7 @@ public class Bullet : MonoBehaviour
         timer -= Time.deltaTime;
         if (timer <= 0f) DisableBullet();
     }
-    // 풀에서 꺼낼 때 팀/속도를 지정해주는 진입점
+    // 풀에서 꺼낼 때 팀/속도를 지정
     public void Initialize(BulletTeam team, Vector2 velocity)
     {
         this.team = team;

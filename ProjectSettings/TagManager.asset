@@ -14,11 +14,11 @@ TagManager:
   - Enemy
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - PlayerShield
+  - EnemyShield
+  - PlayerBullet
+  - EnemyBullet
   - 
   - 
   - 

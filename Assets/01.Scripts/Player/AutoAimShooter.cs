@@ -21,6 +21,9 @@ public class AutoAimShooter : MonoBehaviour
     [SerializeField] private float minT = 0.25f, maxT = 0.9f;
     [SerializeField] private float arcHeight = 1.5f;
 
+    [SerializeField] private PoolKey bulletKey = PoolKey.EnemyBullet;
+    [SerializeField] private BulletTeam team = BulletTeam.Enemy;
+
     float shootTimer;
 
     void Awake()
@@ -93,23 +96,18 @@ public class AutoAimShooter : MonoBehaviour
 
     void FireVelocity(Vector2 v0, bool orient = true)
     {
-        var go = ObjectPoolManager.Instance.Get(PoolKey.PlayerBullet);
+        var go = ObjectPoolManager.Instance.Get(bulletKey);
         go.transform.position = firePoint.position;
-
         if (orient) go.transform.up = v0.normalized;
 
         var b = go.GetComponent<Bullet>();
         var rb = go.GetComponent<Rigidbody2D>();
 
         if (b != null) 
-            b.Initialize(BulletTeam.Player, v0);
-
-        else 
+            b.Initialize(team, v0);
+        else if (rb) 
         { 
-            if (rb) 
-            { 
-                rb.velocity = v0; go.SetActive(true); 
-            } 
+            rb.velocity = v0; go.SetActive(true); 
         }
     }
 }
