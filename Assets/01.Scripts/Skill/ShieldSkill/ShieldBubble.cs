@@ -18,7 +18,6 @@ public class ShieldBubble : MonoBehaviour
         if (col) col.enabled = true;
         if (vfxRoot) vfxRoot.SetActive(true);
         gameObject.SetActive(true);
-        // 오너 중심에 위치
         transform.position = owner.position;
     }
 

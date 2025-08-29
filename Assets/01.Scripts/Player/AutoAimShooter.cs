@@ -33,7 +33,7 @@ public class AutoAimShooter : MonoBehaviour
 
     void Update()
     {
-        var tgt = targetRef ? targetRef.Target : null;
+        var tgt = targetRef.Target;
 
         if (range > 0f)
         {

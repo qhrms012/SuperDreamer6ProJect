@@ -31,7 +31,7 @@ public class MultiShotSkill : MonoBehaviour, ISkill
         if (Time.time < lastUse + cooldown) return false;
 
         var tgt = targetRef.Target;
-        firePoint = transform;
+        firePoint = firePoint.transform;
 
 
         var sample = ObjectPoolManager.Instance.Get(bulletKey);

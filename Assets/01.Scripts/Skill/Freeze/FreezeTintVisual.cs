@@ -15,14 +15,12 @@ public class FreezeTintVisual : MonoBehaviour
 
     void Awake()
     {
-        // 자신의 모든 스프라이트 수집
         renderers = GetComponentsInChildren<SpriteRenderer>(includeInactive: true);
         baseColors = new Color[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
-            baseColors[i] = renderers[i].color; // 각자의 원래 색 기억
+            baseColors[i] = renderers[i].color;
     }
 
-    // 지정 시간 동안 파란 틴트
     public void Play(float duration)
     {
         if (running != null) StopCoroutine(running);
@@ -32,27 +30,24 @@ public class FreezeTintVisual : MonoBehaviour
 
     IEnumerator CoTint(float duration)
     {
-        // 1) 페이드 인
         float t = 0f;
         while (t < fadeIn)
         {
             t += Time.deltaTime;
             float a = Mathf.Clamp01(t / fadeIn);
-            ApplyBlend(a); // 0→1
+            ApplyBlend(a);
             yield return null;
         }
         ApplyBlend(1f);
 
-        // 2) 유지
         float hold = Mathf.Max(0f, duration - fadeIn - fadeOut);
         if (hold > 0f) yield return new WaitForSeconds(hold);
 
-        // 3) 페이드 아웃
         t = 0f;
         while (t < fadeOut)
         {
             t += Time.deltaTime;
-            float a = 1f - Mathf.Clamp01(t / fadeOut); // 1→0
+            float a = 1f - Mathf.Clamp01(t / fadeOut);
             ApplyBlend(a);
             yield return null;
         }
@@ -60,7 +55,6 @@ public class FreezeTintVisual : MonoBehaviour
         running = null;
     }
 
-    // baseColor와 freezeColor를 비율 a로 블렌딩
     private void ApplyBlend(float a)
     {
         for (int i = 0; i < renderers.Length; i++)
@@ -70,15 +64,6 @@ public class FreezeTintVisual : MonoBehaviour
             target.a = baseCol.a;
             renderers[i].color = target;
         }
-    }
-
-    // 외부에서 강제로 원복시키고 싶을 때 호출
-    public void ResetColors()
-    {
-        if (running != null) StopCoroutine(running);
-        running = null;
-        for (int i = 0; i < renderers.Length; i++)
-            renderers[i].color = baseColors[i];
     }
 }
 

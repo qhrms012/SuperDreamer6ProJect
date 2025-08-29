@@ -45,7 +45,6 @@ public class BlackHole : MonoBehaviour
 
     private void OnDisable()
     {
-        // 영향권 안의 잔여 속도 제거(관성으로 미끄러짐 방지)
         var hits = Physics2D.OverlapCircleAll(transform.position, radius, targetMask);
         foreach (var h in hits)
         {
@@ -79,7 +78,6 @@ public class BlackHole : MonoBehaviour
             Vector2 tan = new Vector2(-dir.y, dir.x)
                           * (spin >= 0 ? 1f : -1f);
 
-            // 중심에 가까울수록 더 강하게
             float t = Mathf.Clamp01(1f - d / radius);
             float f = Mathf.Pow(t, falloffPower);
 
@@ -109,7 +107,6 @@ public class BlackHole : MonoBehaviour
 
         }
 
-        //도트 데미지
         if (dps > 0f)
         {
             tickTimer -= dt;

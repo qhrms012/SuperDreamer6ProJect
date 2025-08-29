@@ -17,13 +17,9 @@ public class ShieldHitVFX : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-
-        if (!hitPrefab) return;
-
         AudioManager.Instance.PlaySfx(AudioManager.Sfx.Shield);
         Vector2 bulletPos = other.bounds.center;
-        Vector2 hitPos = circle ? circle.ClosestPoint(bulletPos)
-                                : (Vector2)transform.position;
+        Vector2 hitPos = circle.ClosestPoint(bulletPos);
 
         var ps = Instantiate(hitPrefab, hitPos, Quaternion.identity, vfxParent);
         ps.Play();

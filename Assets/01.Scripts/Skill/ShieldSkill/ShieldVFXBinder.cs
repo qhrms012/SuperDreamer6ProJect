@@ -17,7 +17,6 @@ public class ShieldVFXBinder : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!shieldCollider) return;
         float r = shieldCollider.radius;
 
         SyncRadius(psRim, 1.5f);

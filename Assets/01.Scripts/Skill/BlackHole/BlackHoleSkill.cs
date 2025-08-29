@@ -22,7 +22,6 @@ public class BlackHoleSkill : MonoBehaviour, ISkill
 
         var bh = ObjectPoolManager.Instance.Get(bulletKey);
         bh.transform.position = tgt.position;
-        // bh.GetComponent<BlackHole>()?.Activate(3f, LayerMask.GetMask("Enemy"));
         bh.SetActive(true);
 
         lastUse = Time.time;
