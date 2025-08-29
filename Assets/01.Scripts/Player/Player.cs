@@ -12,8 +12,13 @@ public class Player : MonoBehaviour , IDamageable
     private Vector2 moveInput;
     private Rigidbody2D rb;
 
+
+    [Header("Render")]
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+
     [Header("HP")]
-    [SerializeField] private float maxHp = 100f;
+    public float maxHp = 100f;
     [SerializeField] private float curHp = 100f;
 
     private BoxCollider2D boxCollider;
@@ -23,8 +28,9 @@ public class Player : MonoBehaviour , IDamageable
     [Header("Combat")]
     [SerializeField] private AutoAimShooter shooter;
 
-    public Action<float> onDamage;
+    public static event Action<float> onHpChanged;
 
+    public Animator animator;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -35,7 +41,7 @@ public class Player : MonoBehaviour , IDamageable
 
     private void Start()
     {
-        stateMachine.SetState(new PlayerShotState(stateMachine, this,shooter));
+        stateMachine.SetState(new PlayerShotState(stateMachine, animator, this,shooter));
     }
 
     private void Update()
@@ -45,6 +51,14 @@ public class Player : MonoBehaviour , IDamageable
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
+        UpdateFacing();
+    }
+    private void UpdateFacing()
+    {
+        const float deadzone = 0.01f;
+        if (moveInput.x > deadzone) spriteRenderer.flipX = false; // ¿À¸¥ÂÊ(D)
+        if (moveInput.x < -deadzone) spriteRenderer.flipX = true;  // ¿ÞÂÊ(A)
+        else                         spriteRenderer.flipX = false;
     }
 
     private void FixedUpdate()
@@ -56,7 +70,7 @@ public class Player : MonoBehaviour , IDamageable
 
     public void TakeDamage(float damage)
     {
-        curHp -= damage;  
-        onDamage?.Invoke(curHp);
+        curHp -= damage;
+        onHpChanged?.Invoke(curHp);
     }
 }

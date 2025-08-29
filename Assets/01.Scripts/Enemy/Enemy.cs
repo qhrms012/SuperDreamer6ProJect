@@ -7,15 +7,14 @@ public class Enemy : MonoBehaviour , IDamageable
 {
     [SerializeField]
     private float curHp;
-    [SerializeField]
-    private float maxHp;
+    public float maxHp;
 
     private StateMachine stateMachine;
     
     
     private Rigidbody2D rb;
 
-    public Action<float> onDamage;
+    public static event Action<float> onHpChanged;
 
     private void Awake()
     {
@@ -32,7 +31,7 @@ public class Enemy : MonoBehaviour , IDamageable
     public void TakeDamage(float damage)
     {
         curHp -= damage;
-        onDamage?.Invoke(curHp);
+        onHpChanged?.Invoke(curHp);
         Debug.Log($"EnemyÃ¼·Â : {curHp}");
     }
 }

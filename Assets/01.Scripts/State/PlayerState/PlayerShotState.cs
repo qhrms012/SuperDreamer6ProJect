@@ -6,21 +6,21 @@ public class PlayerShotState : Istate
 {
 
     private StateMachine stateMachine;
-    //private Animator animator;
+    private Animator animator;
     private Player player;
     private AutoAimShooter shooter;
 
-    public PlayerShotState(StateMachine machine, /*Animator animator,*/ Player player, AutoAimShooter shooter)
+    public PlayerShotState(StateMachine machine, Animator animator, Player player, AutoAimShooter shooter)
     {
         stateMachine = machine;
-        //this.animator = animator;
+        this.animator = animator;
         this.player = player;
         this.shooter = shooter;
     }
 
     public void Enter()
     {
-        Debug.Log("µé¾î¿È");
+        animator.Play("Shot");
         shooter.enabled = true;
     }
 
@@ -29,7 +29,7 @@ public class PlayerShotState : Istate
         
         if(playerVector.magnitude > 0)
         {
-            stateMachine.SetState(new RunState(stateMachine, player, shooter));
+            stateMachine.SetState(new RunState(stateMachine, animator, player, shooter));
         }
     }
 

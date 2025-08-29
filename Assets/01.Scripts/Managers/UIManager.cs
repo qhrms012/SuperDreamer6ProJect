@@ -21,6 +21,12 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private List<SkillSlot> slots;
     [SerializeField] private bool blockRaycastWhenCooling = true;
 
+
+    [Header("HpUI")]
+    [SerializeField] private Image playerHp;
+    [SerializeField] private Image enemyHp;
+
+
     void Awake()
     {
         foreach (var s in slots)
@@ -35,6 +41,17 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
+    private void OnEnable()
+    {
+        Player.onHpChanged += UpdatePlayerHpUI;
+        Enemy.onHpChanged += UpdateEnemyHpUI;
+    }
+
+    private void OnDisable()
+    {
+        Player.onHpChanged -= UpdatePlayerHpUI;
+        Enemy.onHpChanged -= UpdateEnemyHpUI;
+    }
     void Update()
     {
         foreach (var s in slots)
@@ -50,6 +67,7 @@ public class UIManager : Singleton<UIManager>
         if (s.skill.GetRemainingCooldown() > 0f) return;
 
         bool casted = s.skill.TryCast();
+        Debug.Log("들어옴");
         if (!casted && s.button) StartCoroutine(Pulse(s.button.transform)); // 타겟 없음 등 실패 피드백
     }
 
@@ -73,6 +91,15 @@ public class UIManager : Singleton<UIManager>
             s.button.interactable = remain <= 0f;
     }
 
+    private void UpdatePlayerHpUI(float curHp)
+    {
+        playerHp.fillAmount = curHp / GameManager.Instance.player.maxHp;
+    }
+
+    private void UpdateEnemyHpUI(float curHp)
+    {
+        enemyHp.fillAmount = curHp / GameManager.Instance.enemy.maxHp;
+    }
     private IEnumerator Pulse(Transform t)
     {
         Vector3 baseScale = t.localScale;
