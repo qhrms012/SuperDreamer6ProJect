@@ -33,7 +33,7 @@ public class UIManager : Singleton<UIManager>
     [Header("PlayerBtn")]
     [SerializeField] private HoldButton aButton;   // 왼쪽 버튼
     [SerializeField] private HoldButton dButton;   // 오른쪽 버튼
-    [SerializeField] private bool useUIInput = true; // UI로만 조작할 때 켜기
+    [SerializeField] private bool useUIInput = true; // UI로만 조작할 때
     [SerializeField] private Image playerCheckImage;
 
 
