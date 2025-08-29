@@ -12,6 +12,7 @@ public class ShieldBubble : MonoBehaviour
 
     public void Activate(Transform owner, float duration)
     {
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.ShieldOn);
         follow = owner;
         endTime = Time.time + duration;
         if (col) col.enabled = true;

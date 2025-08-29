@@ -39,6 +39,8 @@ public class BlackHole : MonoBehaviour
     private void OnEnable()
     {
         if (targetMask.value == 0) targetMask = LayerMask.GetMask("Enemy");
+
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.BlackHole);
         endTime = Time.time + duration;
         tickTimer = tickInterval;
     }

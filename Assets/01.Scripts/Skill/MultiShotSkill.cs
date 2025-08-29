@@ -48,6 +48,14 @@ public class MultiShotSkill : MonoBehaviour, ISkill
         int n = Mathf.Max(1, shots);
         for (int i = 0; i < n; i++)
         {
+            if (bulletKey == PoolKey.PlayerBullet)
+            {
+                AudioManager.Instance.PlaySfx(AudioManager.Sfx.Fire);
+            }
+            else if (bulletKey == PoolKey.EnemyBullet)
+            {
+                AudioManager.Instance.PlaySfx(AudioManager.Sfx.EnemyRaser);
+            }
             float t = (n == 1) ? 0.5f : (float)i / (n - 1);
             float off = Mathf.Lerp(-spreadDeg * 0.5f, spreadDeg * 0.5f, t);
             Vector2 v0 = Rotate(v0Center, off);

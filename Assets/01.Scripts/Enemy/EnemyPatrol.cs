@@ -33,10 +33,17 @@ public class EnemyPatrol : MonoBehaviour
 
         pos.x += dir * speed * Time.fixedDeltaTime;
 
-        if (pos.x > rightPos.x) { pos.x = rightPos.x; dir = -1; }
-        if (pos.x < leftPos.x) { pos.x = leftPos.x; dir = 1; }
+        if (pos.x > rightPos.x) 
+        { 
+            pos.x = rightPos.x; dir = -1; 
+        }
+        if (pos.x < leftPos.x) 
+        { 
+            pos.x = leftPos.x; dir = 1;
+        }
 
-        if (useRigidbody && rb) rb.MovePosition(pos);
+        if (useRigidbody && rb) 
+            rb.MovePosition(pos);
         else transform.position = pos;
     }
 }

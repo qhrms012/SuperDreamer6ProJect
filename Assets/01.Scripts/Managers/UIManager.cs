@@ -5,6 +5,7 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 
+
 public class UIManager : Singleton<UIManager>
 {
     [Serializable]
@@ -26,6 +27,15 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Image playerHp;
     [SerializeField] private Image enemyHp;
 
+    [Header("FinishUI")]
+    [SerializeField] private TextMeshProUGUI finishText;
+
+    [Header("PlayerBtn")]
+    [SerializeField] private HoldButton aButton;   // 왼쪽 버튼
+    [SerializeField] private HoldButton dButton;   // 오른쪽 버튼
+    [SerializeField] private bool useUIInput = true; // UI로만 조작할 때 켜기
+    [SerializeField] private Image playerCheckImage;
+
 
     void Awake()
     {
@@ -38,27 +48,40 @@ public class UIManager : Singleton<UIManager>
 
 
             UpdateSlotUI(s);
+            UpdatePlayer();
         }
     }
 
     private void OnEnable()
     {
         Player.onHpChanged += UpdatePlayerHpUI;
+        Player.isDead += UpdateEnemyFinishUI;
         Enemy.onHpChanged += UpdateEnemyHpUI;
+        Enemy.isDead += UpdatePlayerFinishUI;
     }
 
     private void OnDisable()
     {
         Player.onHpChanged -= UpdatePlayerHpUI;
+        Player.isDead -= UpdateEnemyFinishUI;
         Enemy.onHpChanged -= UpdateEnemyHpUI;
+        Enemy.isDead -= UpdatePlayerFinishUI;
     }
     void Update()
-    {
+    {            
         foreach (var s in slots)
         {
             if (s.skill == null) continue;
             UpdateSlotUI(s);
         }
+
+        if (!useUIInput) return;
+
+        float x = 0f;
+        if (aButton && aButton.IsHeld) x -= 1f;
+        if (dButton && dButton.IsHeld) x += 1f;
+
+        GameManager.Instance.player.SetUiMove(new Vector2(x, 0f));
     }
 
     private void OnClickSkill(SkillSlot s)
@@ -67,8 +90,8 @@ public class UIManager : Singleton<UIManager>
         if (s.skill.GetRemainingCooldown() > 0f) return;
 
         bool casted = s.skill.TryCast();
-        Debug.Log("들어옴");
-        if (!casted && s.button) StartCoroutine(Pulse(s.button.transform)); // 타겟 없음 등 실패 피드백
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.ButtonPress);
+        if (!casted && s.button)    StartCoroutine(Pulse(s.button.transform)); 
     }
 
     private void UpdateSlotUI(SkillSlot s)
@@ -91,6 +114,20 @@ public class UIManager : Singleton<UIManager>
             s.button.interactable = remain <= 0f;
     }
 
+    public void UpdatePlayer()
+    {
+        if (useUIInput)
+        {
+            useUIInput = false;
+            playerCheckImage.gameObject.SetActive(false);
+        }
+        else
+        {
+            useUIInput = true;
+            playerCheckImage.gameObject.SetActive(true);
+        }
+
+    }
     private void UpdatePlayerHpUI(float curHp)
     {
         playerHp.fillAmount = curHp / GameManager.Instance.player.maxHp;
@@ -100,6 +137,9 @@ public class UIManager : Singleton<UIManager>
     {
         enemyHp.fillAmount = curHp / GameManager.Instance.enemy.maxHp;
     }
+
+    private void UpdateEnemyFinishUI(bool finish) => finishText.text = "Lose";
+    private void UpdatePlayerFinishUI(bool finish) => finishText.text = "Victory";
     private IEnumerator Pulse(Transform t)
     {
         Vector3 baseScale = t.localScale;

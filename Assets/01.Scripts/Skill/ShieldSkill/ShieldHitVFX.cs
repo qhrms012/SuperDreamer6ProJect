@@ -20,6 +20,7 @@ public class ShieldHitVFX : MonoBehaviour
 
         if (!hitPrefab) return;
 
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Shield);
         Vector2 bulletPos = other.bounds.center;
         Vector2 hitPos = circle ? circle.ClosestPoint(bulletPos)
                                 : (Vector2)transform.position;

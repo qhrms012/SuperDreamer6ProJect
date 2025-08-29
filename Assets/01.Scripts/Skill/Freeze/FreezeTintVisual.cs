@@ -27,6 +27,7 @@ public class FreezeTintVisual : MonoBehaviour
     {
         if (running != null) StopCoroutine(running);
         running = StartCoroutine(CoTint(duration));
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.IceSound, duration);
     }
 
     IEnumerator CoTint(float duration)

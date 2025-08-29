@@ -70,6 +70,16 @@ public class AutoAimShooter : MonoBehaviour
         Vector2 dest = tgt.position;
 
         var bullet = ObjectPoolManager.Instance.Get(PoolKey.PlayerBullet);
+
+        if(bulletKey == PoolKey.PlayerBullet)
+        {
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.Fire);
+        }
+        else if(bulletKey == PoolKey.EnemyBullet)
+        {
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.EnemyRaser);
+        }
+
         var rbS = bullet.GetComponent<Rigidbody2D>();
 
         float g = Physics2D.gravity.y * (rbS ? rbS.gravityScale : 1f);

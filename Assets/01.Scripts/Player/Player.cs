@@ -28,6 +28,8 @@ public class Player : MonoBehaviour , IDamageable
     [Header("Combat")]
     [SerializeField] private AutoAimShooter shooter;
 
+    public static event Action<bool> isDead;
+
     public static event Action<float> onHpChanged;
 
     public Animator animator;
@@ -71,6 +73,21 @@ public class Player : MonoBehaviour , IDamageable
     public void TakeDamage(float damage)
     {
         curHp -= damage;
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.Hit);
+        if(curHp < 0)
+        {
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.Dead);
+            animator.Play("Dead");
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.Lose);
+            isDead?.Invoke(true);
+        }
         onHpChanged?.Invoke(curHp);
     }
+
+    public void SetUiMove(Vector2 v)
+    {
+        moveInput = v;
+        UpdateFacing();
+    }
+
 }

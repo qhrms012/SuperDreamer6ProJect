@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour , IDamageable
     private Rigidbody2D rb;
 
     public static event Action<float> onHpChanged;
+    public static event Action<bool> isDead;
 
     private void Awake()
     {
@@ -33,7 +34,14 @@ public class Enemy : MonoBehaviour , IDamageable
     {
         curHp -= damage;
         onHpChanged?.Invoke(curHp);
-        if (curHp < 0) animator.Play("Dead");
+        AudioManager.Instance.PlaySfx(AudioManager.Sfx.EnemyHit);
+        if (curHp < 0)
+        {
+            animator.Play("Dead");
+            isDead?.Invoke(true);
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.Win);
+            AudioManager.Instance.PlaySfx(AudioManager.Sfx.EnemyDead);
+        }
         Debug.Log($"EnemyÃ¼·Â : {curHp}");
     }
 }
