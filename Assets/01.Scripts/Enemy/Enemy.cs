@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour , IDamageable
 
     private StateMachine stateMachine;
     
+    public Animator animator;
     
     private Rigidbody2D rb;
 
@@ -32,6 +33,7 @@ public class Enemy : MonoBehaviour , IDamageable
     {
         curHp -= damage;
         onHpChanged?.Invoke(curHp);
+        if (curHp < 0) animator.Play("Dead");
         Debug.Log($"EnemyÃ¼·Â : {curHp}");
     }
 }

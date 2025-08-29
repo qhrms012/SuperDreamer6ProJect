@@ -5161,7 +5161,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -5779,6 +5779,7 @@ GameObject:
   - component: {fileID: 271183571}
   - component: {fileID: 271183570}
   - component: {fileID: 271183574}
+  - component: {fileID: 271183575}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Enemy
@@ -5800,6 +5801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curHp: 200
   maxHp: 200
+  animator: {fileID: 271183575}
 --- !u!50 &271183565
 Rigidbody2D:
   serializedVersion: 4
@@ -6049,6 +6051,27 @@ MonoBehaviour:
   freezeColor: {r: 0.45, g: 0.85, b: 1, a: 1}
   fadeIn: 0.08
   fadeOut: 0.2
+--- !u!95 &271183575
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271183563}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7c877578a77504a42a9109c251fbf674, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &360473276
 GameObject:
   m_ObjectHideFlags: 0
@@ -6329,7 +6352,7 @@ Transform:
   m_GameObject: {fileID: 514731140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6540,7 +6563,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1741872220}
@@ -7715,7 +7738,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -12544,7 +12567,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -97
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0.25, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -13499,6 +13522,8 @@ MonoBehaviour:
     cooldownText: {fileID: 810548529}
     skillBehaviour: {fileID: 1114275710}
   blockRaycastWhenCooling: 1
+  playerHp: {fileID: 1296123072}
+  enemyHp: {fileID: 1922184130}
 --- !u!1 &1114275708
 GameObject:
   m_ObjectHideFlags: 0
@@ -13981,6 +14006,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1431283632}
   - component: {fileID: 1431283633}
+  - component: {fileID: 1431283634}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -14016,6 +14042,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 271183568}
+--- !u!114 &1431283634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431283631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06b0ba9e123837a4f94ad2ad8d73dcfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1955948714}
+  enemy: {fileID: 271183564}
 --- !u!1 &1434840556
 GameObject:
   m_ObjectHideFlags: 0
@@ -15002,7 +15042,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -20181,7 +20221,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -96
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0.25, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -21230,7 +21270,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
