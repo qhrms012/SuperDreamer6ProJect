@@ -30,17 +30,16 @@ public class MultiShotSkill : MonoBehaviour, ISkill
     {
         if (Time.time < lastUse + cooldown) return false;
 
-        var tgt = targetRef ? targetRef.Target : null;
-        if (!tgt || !tgt.gameObject.activeInHierarchy) return false;
-        if (!firePoint) firePoint = transform;
+        var tgt = targetRef.Target;
+        firePoint = transform;
 
 
         var sample = ObjectPoolManager.Instance.Get(bulletKey);
         var rbS = sample.GetComponent<Rigidbody2D>();
         float g = Physics2D.gravity.y * (rbS ? rbS.gravityScale : 1f);
-        sample.SetActive(false); // Ç®·Î ¹Ý³³
+        sample.SetActive(false);
 
-        // Áß¾Ó Åº v0 ¡æ ÁÂ¿ì·Î È¸ÀüÇÏ¸ç n¹ß ¹ß»ç
+
         Vector2 origin = firePoint.position;
         Vector2 dest = tgt.position;
         Vector2 v0Center = ComputeV0(origin, dest, g);
