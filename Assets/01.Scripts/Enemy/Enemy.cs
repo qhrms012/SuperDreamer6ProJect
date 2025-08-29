@@ -42,6 +42,5 @@ public class Enemy : MonoBehaviour , IDamageable
             AudioManager.Instance.PlaySfx(AudioManager.Sfx.Win);
             AudioManager.Instance.PlaySfx(AudioManager.Sfx.EnemyDead);
         }
-        Debug.Log($"EnemyÃ¼·Â : {curHp}");
     }
 }

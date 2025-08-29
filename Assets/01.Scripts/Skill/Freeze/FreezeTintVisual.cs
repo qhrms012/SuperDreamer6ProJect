@@ -65,7 +65,6 @@ public class FreezeTintVisual : MonoBehaviour
     {
         for (int i = 0; i < renderers.Length; i++)
         {
-            // 알파는 원래 알파 유지하면서 RGB만 블렌딩하고 싶다면 아래처럼:
             var baseCol = baseColors[i];
             var target = Color.Lerp(baseCol, freezeColor, a);
             target.a = baseCol.a;

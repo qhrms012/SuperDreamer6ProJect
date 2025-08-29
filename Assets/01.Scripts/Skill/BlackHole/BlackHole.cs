@@ -38,8 +38,6 @@ public class BlackHole : MonoBehaviour
 
     private void OnEnable()
     {
-        if (targetMask.value == 0) targetMask = LayerMask.GetMask("Enemy");
-
         AudioManager.Instance.PlaySfx(AudioManager.Sfx.BlackHole);
         endTime = Time.time + duration;
         tickTimer = tickInterval;
@@ -51,7 +49,7 @@ public class BlackHole : MonoBehaviour
         var hits = Physics2D.OverlapCircleAll(transform.position, radius, targetMask);
         foreach (var h in hits)
         {
-            var rb = h ? h.attachedRigidbody : null;
+            var rb = h.attachedRigidbody;
             if (rb && rb.bodyType == RigidbodyType2D.Dynamic)
             {
                 rb.velocity = Vector2.zero;

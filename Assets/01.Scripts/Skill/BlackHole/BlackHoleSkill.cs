@@ -18,8 +18,7 @@ public class BlackHoleSkill : MonoBehaviour, ISkill
     {
         if (Time.time < lastUse + cooldown) return false;
 
-        var tgt = targetRef ? targetRef.Target : null;
-        if (!tgt) return false;
+        var tgt =  targetRef.Target;
 
         var bh = ObjectPoolManager.Instance.Get(bulletKey);
         bh.transform.position = tgt.position;

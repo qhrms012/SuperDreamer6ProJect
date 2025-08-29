@@ -12,7 +12,7 @@ public class ShieldHitVFX : MonoBehaviour
     void Awake()
     {
         circle = GetComponent<CircleCollider2D>();
-        if (!vfxParent) vfxParent = transform;
+        vfxParent = transform;
     }
 
     void OnTriggerEnter2D(Collider2D other)

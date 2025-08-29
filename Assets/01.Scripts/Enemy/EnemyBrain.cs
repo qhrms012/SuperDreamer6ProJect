@@ -35,7 +35,7 @@ public class EnemyBrain : MonoBehaviour
 
     void Awake()
     {
-        if (!targetRef) targetRef = FindObjectOfType<TargetRef>();
+        targetRef = FindObjectOfType<TargetRef>();
         sBlackHole = blackHoleSkill as ISkill;
         sMultiShot = multiShotSkill as ISkill;
         sFreeze = freezeSkill as ISkill;
@@ -84,7 +84,7 @@ public class EnemyBrain : MonoBehaviour
 
     void ToggleShoot(bool on)
     {
-        if (shooter) shooter.enabled = on;
+        shooter.enabled = on;
 
         var rb = patrol.GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(0f, rb.velocity.y);
@@ -92,7 +92,7 @@ public class EnemyBrain : MonoBehaviour
 
     void TogglePatrol(bool on)
     {
-        if (patrol) patrol.enabled = on;
+        patrol.enabled = on;
 
         if (!on)
         {
@@ -109,8 +109,6 @@ public class EnemyBrain : MonoBehaviour
 
         void Add(ISkill s, float w)
         {
-            if (s == null) return;
-            if (avoidRepeat && lastSkill == s) return;
             if (s.GetRemainingCooldown() <= 0f) candidates.Add((s, Mathf.Max(0f, w)));
         }
 
@@ -133,7 +131,8 @@ public class EnemyBrain : MonoBehaviour
             foreach (var c in candidates)
             {
                 acc += c.w;
-                if (r <= acc) return c.s;
+                if (r <= acc) 
+                    return c.s;
             }
             return candidates[0].s;
         }
@@ -148,16 +147,18 @@ public class EnemyBrain : MonoBehaviour
         }
     }
 
-    bool IsReady(ISkill s) => s != null && s.GetRemainingCooldown() <= 0f;
+    bool IsReady(ISkill s) =>  s.GetRemainingCooldown() <= 0f;
 
     ISkill EarliestReady(params ISkill[] list)
     {
         ISkill best = null; float bestRemain = float.MaxValue;
         foreach (var s in list)
         {
-            if (s == null) continue;
             float r = s.GetRemainingCooldown();
-            if (r < bestRemain) { bestRemain = r; best = s; }
+            if (r < bestRemain)
+            { 
+                bestRemain = r; best = s; 
+            }
         }
         return best;
     }

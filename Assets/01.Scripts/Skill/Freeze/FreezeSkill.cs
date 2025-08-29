@@ -19,9 +19,10 @@ public class FreezeSkill : MonoBehaviour, ISkill
 
     public bool TryCast()
     {
-        if (Time.time < lastUse + cooldown) return false;
-        var tgt = targetRef ? targetRef.Target : null;
-        if (!tgt) return false;
+        if (Time.time < lastUse + cooldown) 
+            return false;
+        var tgt = targetRef.Target;
+
 
         var go = ObjectPoolManager.Instance.Get(bulletKey);
         go.transform.position = firePoint.position;

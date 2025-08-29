@@ -24,7 +24,6 @@ public class ShieldBubble : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!follow) return;
         transform.position = follow.position;
         if (Time.time >= endTime)
         {

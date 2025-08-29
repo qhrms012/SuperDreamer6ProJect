@@ -34,12 +34,12 @@ public class AutoAimShooter : MonoBehaviour
     void Update()
     {
         var tgt = targetRef ? targetRef.Target : null;
-        if (!tgt || !tgt.gameObject.activeInHierarchy) return;
 
         if (range > 0f)
         {
             float sq = ((Vector2)tgt.position - (Vector2)transform.position).sqrMagnitude;
-            if (sq > range * range) return; // 사거리 밖이면 발사 안 함
+            if (sq > range * range) 
+                return; // 사거리 밖이면 발사 안 함
         }
 
         shootTimer -= Time.deltaTime;
@@ -52,7 +52,9 @@ public class AutoAimShooter : MonoBehaviour
 
     void Shoot(Transform tgt)
     {
-        if (useBallistic) ShootBallistic(tgt);
+        if (useBallistic) 
+            ShootBallistic(tgt);
+
         else ShootStraight(tgt);
     }
 
@@ -108,7 +110,9 @@ public class AutoAimShooter : MonoBehaviour
     {
         var go = ObjectPoolManager.Instance.Get(bulletKey);
         go.transform.position = firePoint.position;
-        if (orient) go.transform.up = v0.normalized;
+
+        if (orient) 
+            go.transform.up = v0.normalized;
 
         var b = go.GetComponent<Bullet>();
         var rb = go.GetComponent<Rigidbody2D>();

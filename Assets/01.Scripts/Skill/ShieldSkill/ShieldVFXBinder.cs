@@ -31,14 +31,12 @@ public class ShieldVFXBinder : MonoBehaviour
 
     void SyncRadius(ParticleSystem ps, float r)
     {
-        if (!ps) return;
         var sh = ps.shape;
         sh.radius = r;
     }
 
     void SetOrbital(ParticleSystem ps, float orbitalZ)
     {
-        if (!ps) return;
         var vol = ps.velocityOverLifetime;
         vol.orbitalZ = new ParticleSystem.MinMaxCurve(orbitalZ);
         vol.space = ParticleSystemSimulationSpace.Local;
