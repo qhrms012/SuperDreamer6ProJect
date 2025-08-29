@@ -20,8 +20,8 @@ public class ShieldVFXBinder : MonoBehaviour
         if (!shieldCollider) return;
         float r = shieldCollider.radius;
 
-        SyncRadius(psRim, r);
-        SyncRadius(psField, r);
+        SyncRadius(psRim, 1.5f);
+        SyncRadius(psField, 1.5f);
 
         SetOrbital(psRim, rimSpin);
         SetOrbital(psField, fieldSpin);
